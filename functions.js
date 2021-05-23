@@ -19,7 +19,7 @@ function getBookById(bookId, books) {
   }
   return undefined
 }
- console.log(getBookById(12, books));
+//console.log(getBookById(12, books));
 
 /**************************************************************
  * getAuthorByName(authorName, authors):
@@ -37,7 +37,7 @@ function getAuthorByName(authorName, authors) {
   }
   return undefined
 }
-console.log(getAuthorByName("J.K. Rowling", authors));
+//console.log(getAuthorByName("J.K. Rowling", authors));
 
 /**************************************************************
  * bookCountsByAuthor(authors):
@@ -54,7 +54,7 @@ function bookCountsByAuthor(authors) {
  }
  return arrayy
 }
-  console.log(bookCountsByAuthor(authors));
+ //console.log(bookCountsByAuthor(authors));
 
 /**************************************************************
  * booksByColor(books):
@@ -95,7 +95,7 @@ function titlesByAuthorName(authorName, authors, books) {
   }
   return []
 }
- console.log(titlesByAuthorName("George R.R. Martin", authors, books));
+// console.log(titlesByAuthorName("George R.R. Martin", authors, books));
 
 /**************************************************************
  * mostProlificAuthor(authors):
@@ -115,7 +115,7 @@ function mostProlificAuthor(authors) {
  const sorted = counter.sort()
  return sorted[0][0]
 }
- console.log(mostProlificAuthor(authors));
+// console.log(mostProlificAuthor(authors));
 
 /**************************************************************
  * relatedBooks(bookId, authors, books):
@@ -150,7 +150,7 @@ function relatedBooks(bookId, authors, books) {
   })
   return bookes
 }
- console.log(relatedBooks(50, authors, books));
+// console.log(relatedBooks(50, authors, books));
 
 /**************************************************************
  * friendliestAuthor(authors):
@@ -164,8 +164,8 @@ function friendliestAuthor(authors) {
   authors.forEach(x =>{
     x.books.forEach(book =>{
       authors.forEach(y => {
-        y.books.forEach( z =>{
-          if(book == z){
+        y.books.forEach( bb =>{
+          if(book == bb){
             lists.push(x.name)
           }
         })
@@ -180,7 +180,7 @@ function friendliestAuthor(authors) {
 };
 return mode(lists)
 }
-  console.log(friendliestAuthor(authors));
+// console.log(friendliestAuthor(authors));
 
 module.exports = {
   getBookById,
