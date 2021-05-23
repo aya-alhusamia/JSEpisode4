@@ -12,12 +12,7 @@ function getBookById(bookId, books) {
   // Your code goes here
   // if(bookId)
   // {return books.filter((idOf) => idOf.id === bookId)}
-  for(let i=0;i<books.length;i++){
-    if(books[i].id == bookId){
-      return books[i];
-    }
-  }
-  return undefined
+  return books.find(book => book.id === bookId);
 }
 //console.log(getBookById(12, books));
 
@@ -30,12 +25,15 @@ function getBookById(bookId, books) {
  ****************************************************************/
 function getAuthorByName(authorName, authors) {
   // Your code goes here
-  for(let i=0;i<authors.length;i++){
-    if(authors[i].name.toUpperCase() == authorName.toUpperCase()){
-      return authors[i];
-    }
-  }
-  return undefined
+  // for(let i=0;i<authors.length;i++){
+  //   if(authors[i].name.toUpperCase() == authorName.toUpperCase()){
+  //     return authors[i];
+  //   }
+  // }
+  // return undefined
+  return authors.find(
+    author => author.name.toLowerCase() === authorName.toLowerCase()
+  );
 }
 //console.log(getAuthorByName("J.K. Rowling", authors));
 
@@ -48,11 +46,15 @@ function getAuthorByName(authorName, authors) {
 function bookCountsByAuthor(authors) {
   // Your code goes here
   // authors.forEach(author =>console.log([author.name , author.books.length]))
-  const arrayy=[]
- for(let i=0;i<authors.length;i++){
-   arrayy.push({ 'author': authors[i].name, 'bookCount': authors[i].books.length})
- }
- return arrayy
+//   const arrayy=[]
+//  for(let i=0;i<authors.length;i++){
+//    arrayy.push({ 'author': authors[i].name, 'bookCount': authors[i].books.length})
+//  }
+//  return arrayy
+return authors.map(authorA => ({
+  author: authorA.name,
+  bookCount: authorA.books.length
+}));
 }
  //console.log(bookCountsByAuthor(authors));
 
@@ -89,11 +91,9 @@ function booksByColor(books) {
  ****************************************************************/
 function titlesByAuthorName(authorName, authors, books) {
   // Your code goes here
-  let author = getAuthorByName(authorName, authors);
-  if (author){
-    return author.books.map(id => getBookById(id, books).title)
-  }
-  return []
+   const author = getAuthorByName(authorName, authors);
+  if (!author) return [];
+  return author.books.map(bookId => getBookById(bookId, books).title);
 }
 // console.log(titlesByAuthorName("George R.R. Martin", authors, books));
 
@@ -106,14 +106,15 @@ function titlesByAuthorName(authorName, authors, books) {
  ****************************************************************/
 function mostProlificAuthor(authors) {
   // Your code goes here
-  const counter=[]
- authors.forEach(max => {
-   if(!counter.includes(max.books.length)){
-     counter.push([max.name, max.books.length])
-   }
- } )
- const sorted = counter.sort()
- return sorted[0][0]
+  let authorProfile = authors[0];
+
+  authors.forEach(author => {
+    if (author.books.length > authorProfile.books.length) {
+      authorProfile = author;
+    }
+  });
+
+  return authorProfile.name;
 }
 // console.log(mostProlificAuthor(authors));
 
@@ -142,13 +143,14 @@ function mostProlificAuthor(authors) {
  ****************************************************************/
 function relatedBooks(bookId, authors, books) {
   // Your code goes here
-  let book = getBookById(bookId,books);
-  let author = book.authors;
-  let bookes=[]
-  author.forEach(x => {
-    bookes = bookes.concat(titlesByAuthorName(x.name,authors,books))
-  })
-  return bookes
+  const book = getBookById(bookId, books);
+  let titles = [];
+
+  book.authors.forEach(
+    author =>
+      (titles = titles.concat(titlesByAuthorName(author.name, authors, books)))
+  );
+  return titles;
 }
 // console.log(relatedBooks(50, authors, books));
 
@@ -160,25 +162,27 @@ function relatedBooks(bookId, authors, books) {
  ****************************************************************/
 function friendliestAuthor(authors) {
   // Your code goes here
-  let lists=[]
-  authors.forEach(x =>{
-    x.books.forEach(book =>{
-      authors.forEach(y => {
-        y.books.forEach( bb =>{
-          if(book == bb){
-            lists.push(x.name)
-          }
-        })
-      })
-    })
-  })
-  function mode(arr){
-    return arr.sort((a,b) =>
-          arr.filter(v => v===a).length
-        - arr.filter(v => v===b).length
-    ).pop();
-};
-return mode(lists)
+  authors.forEach(author => {
+    author.coauthoringCount = 0;
+    authors.forEach(secondAuthor => {
+      if (secondAuthor.name !== author.name) {
+        const sharedBooks = secondAuthor.books.filter(bookId =>
+          author.books.includes(bookId)
+        );
+        author.coauthoringCount += sharedBooks.length;
+      }
+    });
+  });
+
+  let friendlyAuthor = authors[0];
+
+  authors.forEach(author => {
+    if (author.coauthoringCount > friendlyAuthor.coauthoringCount) {
+      friendlyAuthor = author;
+    }
+  });
+
+  return friendlyAuthor.name;
 }
 // console.log(friendliestAuthor(authors));
 
